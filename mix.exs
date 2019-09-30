@@ -5,7 +5,7 @@ defmodule LiveViewDemo.MixProject do
     [
       app: :live_view_demo,
       version: "0.1.0",
-      elixir: "~> 1.9.1",
+      elixir: "~> 1.9.0",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -36,7 +36,7 @@ defmodule LiveViewDemo.MixProject do
       {:phoenix, "~> 1.4.9"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_ecto, "~> 4.0"},
-      {:phoenix_live_view, github: "phoenixframework/phoenix_live_view"},
+      {:phoenix_live_view, "~> 0.3.1"},
       {:ecto_sql, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.11"},

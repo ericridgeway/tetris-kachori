@@ -11,7 +11,6 @@ defmodule LiveViewDemoWeb.Tetris.Index do
     game = Game.new()
 
     assign(socket,
-      name: random_word(),
       game: game,
       game_over: game.game_over,
       # board: game.board,
@@ -25,7 +24,6 @@ defmodule LiveViewDemoWeb.Tetris.Index do
     game = Game.new(game_mode)
 
     assign(socket,
-      name: random_word(),
       game: game,
       game_over: game.game_over,
       # board: game.board,
@@ -52,8 +50,8 @@ defmodule LiveViewDemoWeb.Tetris.Index do
 
 
     <div class="tetris options">
-    <button phx-click="tetris-new-game" value="classic">New Classic Game</button>
-    <button phx-click="tetris-new-game" value="evil">New Evil Game</button>
+    <button phx-click="tetris-new-game" phx-value-mode="classic">New Classic Game</button>
+    <button phx-click="tetris-new-game" phx-value-mode="evil">New Evil Game</button>
     </div>
 
     </div>
@@ -64,54 +62,6 @@ defmodule LiveViewDemoWeb.Tetris.Index do
   end
   def render(%{game_over: false} = assigns) do
     LiveViewDemoWeb.TetrisView.render("tetris-game.html", assigns)
-  end
-
-  def render(assigns) do
-    ~L"""
-
-    <div>
-    <button phx-click="tetris">Tetris toggle</button>
-    </div>
-
-    <br/>
-    <div> word: <%= @name %> </div>
-    <button phx-click="increment">increment counter</button>
-
-    <button phx-click="counter" phx-value="incr">+</button>
-    <button phx-click="counter" phx-value="decr">-</button>
-
-
-    <pre phx-keyup="counter_grow" phx-target="window">
-    Press a to increment by 5, b to increment by 3
-    </pre>
-
-
-    number <%#= @offset_y %>
-    <div class="cards-container">
-
-    <div class="column cards-column">
-    <div class="card" draggable="true"> A </div>
-    <div class="card" draggable="true"> B </div>
-    <div class="card" draggable="true"> C </div>
-    <div class="card" draggable="true"> J </div>
-    <div class="card" draggable="true"> K </div>
-    </div>
-
-    <div class="column cards-column">
-    <div class="card" draggable="true"> D </div>
-    <div class="card" draggable="true"> E </div>
-    <div class="card" draggable="true"> F </div>
-    </div>
-
-    <div class="column cards-column">
-    <div class="card" draggable="true"> G </div>
-    <div class="card" draggable="true"> H </div>
-    <div class="card" draggable="true"> I </div>
-    <div class="card" draggable="true"> L </div>
-    </div>
-
-    </div>
-    """
   end
 
   def handle_event("game_submit", %{
@@ -133,24 +83,26 @@ defmodule LiveViewDemoWeb.Tetris.Index do
     }
   end
 
-  def handle_info(:click, %{counter: count} = socket) do
-    {:noreply, socket}
-  end
-
   def handle_info(:tick, socket) do
     Process.send_after(self(), :tick, socket.assigns.speed)
 
      move_down(socket)
   end
 
-  # def handle_event("move",  %{"code" => "ArrowUp"}, socket) do
-  # def handle_event("tetris-new-game", value, socket) do
-  def handle_event("tetris-new-game", %{ "value" => "classic"}, socket) do
-    {:noreply, restart_game(socket, :regular)}
-  end
+  # # def handle_event("move",  %{"code" => "ArrowUp"}, socket) do
+  # # def handle_event("tetris-new-game", value, socket) do
+  # def handle_event("tetris-new-game", game_mode, socket) do
+  #   IO.puts "------------"
+  #   IO.puts inspect(game_mode)
+  # end
 
-  def handle_event("tetris-new-game", %{"value" => "evil"}, socket) do
-    {:noreply, restart_game(socket, :evil)}
+  def handle_event("tetris-new-game", %{"mode" => game_mode}, socket) do
+    return_game = case String.to_atom(game_mode) do
+                    :evil -> restart_game(socket, :evil)
+                    :classic -> restart_game(socket, :regular)
+                    _ -> restart_game(socket, :regular)
+                  end
+    {:noreply, return_game}
   end
 
   def handle_event("tetris", "rotate", socket) do
@@ -162,18 +114,8 @@ defmodule LiveViewDemoWeb.Tetris.Index do
     {:noreply, assign(socket, tetris: !socket.assigns.tetris)}
   end
 
-  def handle_event("counter", "incr", socket) do
-    {:noreply, inc(socket, 1)}
-  end
-
-  def handle_event("counter", "decr", socket) do
-    {:noreply, inc(socket, -1)}
-  end
-
-
   def handle_event("joystick-move", %{"dir" => direction}, socket) do
     # add strong validation, direction has to be valid
-    # IO.puts inspect(direction)
 
     game = case String.to_atom(direction) do
              :left ->
@@ -185,50 +127,25 @@ defmodule LiveViewDemoWeb.Tetris.Index do
              :down ->
                Game.move_object(socket.assigns.game, :down)
            end
-
     {:noreply, assign(socket, game: game)}
-  end
-
-  def handle_event("move", %{"code" => "ArrowLeft"}, socket) do
-    {:noreply,
-     assign(socket, game: Game.move_object(socket.assigns.game, :left) )
-    }
-  end
-
-  def handle_event("move",  %{"code" => "ArrowRight"}, socket) do
-    {:noreply,
-     assign(socket, game: Game.move_object(socket.assigns.game, :right) )
-    }
-  end
-
-  def handle_event("move",  %{"code" => "ArrowUp"}, socket) do
-    # {:noreply, assign(socket, shape: Shape.rotate(socket.assigns.game.active_shape))}
-    {:noreply, assign(socket, game: Game.rotate_shape(socket.assigns.game))}
   end
 
   def handle_event("move", %{"code" =>  "ArrowDown"}, socket) do
     move_down(socket)
   end
+  def handle_event("move", %{"code" => arrow_direction}, socket) do
+    game = case String.to_atom(arrow_direction) do
+             :ArrowLeft -> Game.move_object(socket.assigns.game, :left)
+             :ArrowRight -> Game.move_object(socket.assigns.game, :right)
+             :ArrowUp -> Game.rotate_shape(socket.assigns.game)
+           end
 
-  def handle_event("counter_grow", "a", socket) do
-    {:noreply, inc(socket, 5)}
-  end
-
-  def handle_event("counter_grow", "b", socket) do
-    {:noreply, inc(socket, 3)}
+    {:noreply, assign(socket, game: game)}
   end
 
   def handle_event(_, _key, socket) do
     {:noreply, socket
     }
-  end
-
-  defp inc(socket, offset) do
-    assign(socket, counter: (socket.assigns.counter + offset))
-  end
-
-  defp change_axis(socket, offset) do
-    assign(socket, x: (socket.assigns.x + offset))
   end
 
   defp move_down(socket, offset \\ 1) do
@@ -240,15 +157,6 @@ defmodule LiveViewDemoWeb.Tetris.Index do
         game_over: game_state.game_over
       )
     }
-  end
-
-  def handle_event("increment", _path, socket) do
-    {:noreply, assign(socket, counter: (socket.assigns.counter + 1))}
-  end
-
-  defp random_word do
-    ~w(one two three four five six seven eight nine zero)
-    |> Enum.random
   end
 
 end
