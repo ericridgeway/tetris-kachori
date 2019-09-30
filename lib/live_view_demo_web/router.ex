@@ -1,13 +1,14 @@
 defmodule LiveViewDemoWeb.Router do
   use LiveViewDemoWeb, :router
+  import Phoenix.LiveView.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
-    plug Phoenix.LiveView.Flash
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug Phoenix.LiveView.Flash
   end
 
   pipeline :api do
@@ -17,8 +18,10 @@ defmodule LiveViewDemoWeb.Router do
   scope "/", LiveViewDemoWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
-    live "/clock", ClockLive
+    # get "/foo", PageController, :index
+    # get "/kanban", KanbanController, :index
+    live "/", Tetris.Index
+    # live "/sheet", Sheet.Indexview
   end
 
   # Other scopes may use custom stacks.
