@@ -2,3 +2,181 @@
 
 @import "./phoenix.css";
 @import "../../deps/phoenix_live_view/assets/css/live_view.css";
+
+html, body {
+    /* display: flex; */
+    /* flex: 1; */
+    margin: 0;
+}
+
+body {
+    /* flex-direction: column; */
+    /* height: 100%; */
+    background: black;
+}
+
+.tetris-container {
+    height: 100vh;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    background-image: url("/images/tetris_bg.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+@media screen and (min-width:769px){
+    .tetris-container{
+        flex-direction: row;
+    }
+
+    .tetris.grid-tile {
+        height: 22px;
+        width: 22px;
+    }
+}
+@media screen and (max-width:768px){
+    .tetris-container{
+        flex-direction: column;
+    }
+
+    .tetris.grid-tile {
+        height: 18px;
+        width: 18px;
+    }
+}
+@media screen and (max-width: 517px){
+    .tetris-container{
+        flex-direction: column;
+    }
+
+    .tetris.grid-tile {
+        height: 14px;
+        width: 14px;
+    }
+
+}
+
+
+.cards-xcontainer {
+    display: flex;
+    flex-direction: row
+}
+
+.board-container {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    background: black;
+    color: blue;
+}
+
+.board-container, .tetris-container {
+    font-family: monospace;
+    font-weight: 700;
+    font-size: 1.5em;
+    display: flex;
+}
+
+.board-container form input {
+    color: white;
+}
+
+.tetris.options {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 1em;
+    /* flex-direction: row;; */
+}
+
+.tetris.options > button {
+    display: flex;
+}
+
+.tetris-container > aside {
+    display: flex;
+    flex-direction: column;
+    /* flex: 2; */
+    padding: 1em;
+    color: yellow;
+}
+
+aside .score {
+    display: flex;
+    border: 2px solid red;
+    padding: 1em;
+    color: yellow;
+}
+
+.tetris-container aside ul {
+    list-style: none;
+    font-size: small;
+}
+
+.tetris-container aside p {
+    color: blue;
+}
+
+.tetris.board {
+    display: flex;
+    background: black;
+}
+
+.sheet.grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(20, 1fr);
+    grid-gap: 1px;
+    background: #eee;
+    border: 1em solid #eee;
+}
+
+.tetris.grid {
+    display: grid;
+    grid-gap: 1px;
+    width: fit-content;
+    height: fit-content;
+    border: 2px solid #eee;
+}
+
+.tetris.grid > .item-a {
+    /* background: red; */
+    /* border-left: 3px solid rgba(255, 246, 143, 0.7); */
+    /* border-top: 3px solid rgba(254, 241, 96, 0.6); */
+    /* border-right: 3px solid rgba(255, 255, 126, 0.8); */
+    /* border-bottom: 3px solid rgba(220, 220, 120, 0.9); */
+    /* border: 3px solid rgba(220, 20, 20, 0.9); */
+    /* height: 1.2em; */
+    /* height: 20px; */
+    /* width: 1.2em; */
+    /* width: 20px; */
+}
+
+.sheet.grid > input {
+    width: 100%;
+    height: 100%;
+    background: white;
+    border: 0px solid;
+    border-radius: 0;
+}
+
+/* .tetris.grid-tile { */
+/*     height: 20px; */
+/*     width: 20px; */
+/* } */
+
+.tetris.tile.active {
+    background: red;
+}
+
+.cards-column {
+    display: flex;
+    flex-direction: column
+}
+
+.card {
+    border: 2px solid #0Fe;
+    padding: 5px;
+    width: 100px;
+}

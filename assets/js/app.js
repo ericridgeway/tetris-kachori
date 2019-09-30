@@ -15,8 +15,26 @@ import "phoenix_html"
 //
 // Local files can be imported directly using relative paths, for example:
 // import socket from "./socket"
-
 import LiveSocket from "phoenix_live_view"
+import {Socket} from "phoenix"
 
-let liveSocket = new LiveSocket("/live")
+let Hooks = {}
+
+
+Hooks.StopKeyScroll =  {
+    mounted(){
+        // disable arrow keys on whole window, set preventDefault;
+        // debugger
+
+        window.addEventListener("keydown", function(e) {
+            // space and arrow keys
+            if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+                e.preventDefault();
+            }
+        }, false);
+
+    }
+}
+
+let liveSocket = new LiveSocket("/live", Socket, {hooks: Hooks})
 liveSocket.connect()
