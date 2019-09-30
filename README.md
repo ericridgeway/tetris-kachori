@@ -2,7 +2,36 @@
 
 This is my entry in [Phoenix Phrenzy](https://phoenixphrenzy.com), showing off what [Phoenix](https://phoenixframework.org/) and [LiveView](https://github.com/phoenixframework/phoenix_live_view) can do.
 
-![App Name Here preview](assets/static/images/preview.gif "App Name Here")
+![App Name Here preview](assets/static/images/preview.gif "Tetris Kachori")
+
+
+# TODO
+- fix the buttons not working issue
+- gigalixir deployment - disconnect old instance and point to this app.
+
+# Tetris Kachori
+- The video to "my journey building tetris Kachori is posted on youtube" (It will answer most of your questions)
+- FREE video course to build this game is posted on SandeshSoni.com (Its 30% completed)
+
+# Improvements / Opinions needed.
+- How to bring down the length of every moment tetris shape is moved or added.
+- How to use phx-update=append in this code. If valid.
+
+# Versions
+- LiveView. Previously it used non-hex package Url. Now updated to 0.3.1
+
+# what is Kachori?
+- Kachori is one of famous Indian Snack.
+- It taste tangy, served with sweet and spicy chutney/sause.
+- pic of Kachori.
+- Youtube video Link.
+
+# Reach me
+- I can be reached on Twitter twitter.com/iamsandeshsoni
+- LinkedIn - LinkedIn profile
+- email - hello+tk@sandeshsoni.com
+- Github - github.com/sandeshsoni
+
 
 # Phrenzy Instructions
 
